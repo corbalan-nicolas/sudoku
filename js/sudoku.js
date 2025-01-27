@@ -2,12 +2,14 @@ import Cell from './cell.js'
 
 class Sudoku {
   #board
+  #mistakes
+  #maxMistakesAllowed
 
   constructor() {
     this.#board =
     [ // Medium
       //0    1    2    3    4    5    6    7    8
-      ['2', '8', '9', ' ', '4', ' ', '7', ' ', ' '], // 0
+      [' ', '8', '9', ' ', '4', ' ', '7', ' ', ' '], // 0
       ['7', '5', '2', ' ', '6', '8', ' ', '4', ' '], // 1
       [' ', ' ', ' ', ' ', ' ', '5', '8', '6', '9'], // 2
       ['1', ' ', '8', '3', '7', ' ', '5', ' ', '2'], // 3
@@ -17,7 +19,6 @@ class Sudoku {
       ['5', '3', ' ', ' ', ' ', '9', ' ', '1', ' '], // 7
       ['9', '2', ' ', ' ', ' ', '7', '6', '8', ' ']  // 8
     ]
-
     // Replace the strings in the board for an object
     for(let y in this.#board) {
       for(let x in this.#board[y]) {
@@ -32,6 +33,8 @@ class Sudoku {
       }
     }
 
+    this.#mistakes = 0
+    this.#maxMistakesAllowed = 3
     this.selectedCell = -1
   }
 
@@ -78,7 +81,7 @@ class Sudoku {
     for(let xFromBucle = initialValueOfXForBucle; xFromBucle < initialValueOfXForBucle + 3; xFromBucle++) {
       for(let yFromBucle = initialValueOfYForBucle; yFromBucle < initialValueOfYForBucle + 3; yFromBucle++) {
         const foundedCell = this.#board[xFromBucle][yFromBucle]
-        console.log(foundedCell.getValue)
+
         if(foundedCell.hasAValue() && foundedValues.includes(foundedCell.getValue)) {
           // The cell is repeated
           return 1
@@ -89,7 +92,45 @@ class Sudoku {
     }
     return 0
   }
+
+  checkForRepeatsAndUpdateMistakes(x, y) {
+    let areMistakes = 0
+    areMistakes += this.checkForRepeatsOnRow(x)
+    areMistakes += this.checkForRepeatsOnColumn(y)
+    areMistakes += this.checkForRepeatsOnBlock(x, y)
+
+    if(areMistakes) {
+      this.#mistakes++
+      return 1
+    }
+    return 0
+  }
+
+  insertValue(x, y) {
+    const cell = this.#board[x][y]
+  }
+
+  /**
+   * Draws the board in the console
+   */
+  logBoard() {
+    console.log(`Mistakes: ${this.#mistakes}`)
+    console.log(`  0   1   2   3   4   5   6   7   8  `)
+    console.log(`----------------BOARD----------------`)
+    this.#board.forEach((row, rowIndex) => {
+      let consoleRow = []
+      for(const col of row) {
+        consoleRow.push(col.getValue)
+      }
+      consoleRow = `| ${consoleRow.join(' | ')} | ${rowIndex}`
+      console.log(consoleRow)
+      if(rowIndex % 3 === 2) {
+        console.log('-'.repeat(37))
+      }
+    })
+  }
 }
 
 const sudoku = new Sudoku()
-console.log(sudoku.checkForRepeatsOnBlock(4, 4))
+sudoku.checkForRepeatsOnBlock(4, 4)
+sudoku.logBoard()
