@@ -1,0 +1,122 @@
+:root {
+  --color-1: #242424;
+  
+  --thick-border: 3px solid rgba(66 61 61 / 0.61);
+  --thin-border: 1px solid rgba(66 61 61 / 0.61);
+  
+  --cell-selected: rgba(0 0 0 / .05);
+  --cell-width: 55px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-container {
+  max-width: 700px;
+  padding: .5rem 100px;
+  margin: auto;
+
+  background-color: #f9f9f9;
+  min-height: 100dvh;
+}
+
+.d-none {
+  display: none;
+}
+
+.board-score {
+  text-align: center;
+  font-size: 1.5em;
+  margin-top: 1em;
+}
+
+.board-header, header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  & :nth-child(2) {
+    justify-self: center;
+  }
+
+  & :nth-child(3) {
+    justify-self: end;
+  }
+}
+
+#board {
+  display: inline-grid;
+  grid-template-columns: repeat(9, var(--cell-width));
+  grid-template-rows: repeat(9, var(--cell-width));
+  user-select: none;
+  
+  border: var(--thick-border);
+}
+
+.board__cell {
+  user-select: none;
+  text-align: center;
+  border: var(--thin-border);
+  font-size: 2rem;
+  border-radius: 0;
+  
+  &:focus {
+    outline: none;
+    background: none;
+
+    background-color: var(--cell-selected);
+  }
+}
+
+.board__cell[data-row-position-on-block="0"] {
+  border-top: var(--thick-border);
+}
+
+.board__cell[data-col-position-on-block="2"] {
+  border-right: var(--thick-border);
+}
+
+.board__cell[data-row-position-on-block="2"] {
+  border-bottom: var(--thick-border);
+}
+
+.board__cell[data-col-position-on-block="0"] {
+  border-left: var(--thick-border);
+}
+
+.actions {
+  display: flex;
+  margin: 1rem 0;
+  justify-content: space-evenly;
+}
+
+#numbers div {
+  display: grid;
+  grid-template-columns: repeat(9, var(--cell-width));
+  grid-template-rows: auto auto;
+
+  justify-items: center;
+}
+
+#numbers div button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: .3em .8em;
+  border-radius: 8px;
+  border: none;
+  background-color: #95e5dd;
+
+  & :nth-child(1) {
+    font-size: 2rem;
+  }
+
+  & :nth-child(2) {
+    color: rgba(0 0 0 / .6);
+  }
+}

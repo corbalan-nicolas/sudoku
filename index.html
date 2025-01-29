@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sudoku</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <script defer src="js/cell.js"></script>
+  <script defer src="js/sudoku.js"></script>
   <script defer src="js/main.js"></script>
 </head>
 <body>
@@ -35,5 +39,45 @@
 
   - Numbers (1 to 9) with the remainings
   -->
+  <div class="main-container">
+    <h1 class="d-none">REALLY basic Sudoku</h1>
+    <header>
+      <div>
+        <button aria-label="Go back">🔙</button>
+        <button aria-label="Rules of Sudoku">💦</button>
+      </div>
+  
+      <button aria-label="Pause game">⏸</button>
+  
+      <button aria-label="Color theme">🎨</button>
+    </header>
+    <main>
+      <p class="board-score">Score: <span id="score">0</span></p>
+  
+      <div class="board-header">
+        <p>Mistakes: <span id="mistakes">0</span></p>
+        <p id="difficulty">Difficulty</p>
+        <p id="timer">00:00</p>
+      </div>
+  
+      <div class="board-container">
+        <!-- Generated dynamicly -->
+      </div>
+      
+      <div>
+        <p>ID: <span id="boardId">1</span></p>
+      </div>
+      
+      <div class="actions">
+        <button aria-label="Undo"><-</button>
+        <button aria-label="eraser">Boerral</button>
+        <button aria-label="Pencil mode">🖊</button>
+      </div>
+      
+      <div id="numbers" class="numbers">
+        <!-- Generated dynamicly -->
+      </div>
+    </main>
+  </div>
 </body>
 </html>

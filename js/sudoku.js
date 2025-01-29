@@ -1,11 +1,21 @@
-import Cell from './cell.js'
-
 class Sudoku {
   #board
   #mistakes
   #maxMistakesAllowed
+  #foundedValues
 
   constructor() {
+    this.#foundedValues = {
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+      '6': 0,
+      '7': 0,
+      '8': 0,
+      '9': 0
+    }
     this.#board =
     [ // Medium
       //0    1    2    3    4    5    6    7    8
@@ -24,15 +34,19 @@ class Sudoku {
       for(let x in this.#board[y]) {
         const cellValue = this.#board[y][x]
         const isEditable = cellValue === ' '? true : false
-
+        
         if(isEditable) {
           this.#board[y][x] = new Cell({isEditable, value: cellValue, positionInBoard: [y, x]})
         }else {
           this.#board[y][x] = new Cell({isEditable: false, value: cellValue, positionInBoard: [y, x]})
         }
+        
+        const cellHasAValue = this.#board[y][x].hasAValue()
+        if(cellHasAValue) this.#foundedValues[cellValue] += 1
       }
     }
 
+    this.difficulty = 'Medium'
     this.#mistakes = 0
     this.#maxMistakesAllowed = 3
     this.selectedCell = -1
@@ -93,7 +107,7 @@ class Sudoku {
     return 0
   }
 
-  checkForRepeatsAndUpdateMistakes(x, y) {
+  checkForMistakes(x, y) {
     let areMistakes = 0
     areMistakes += this.checkForRepeatsOnRow(x)
     areMistakes += this.checkForRepeatsOnColumn(y)
@@ -106,8 +120,60 @@ class Sudoku {
     return 0
   }
 
-  insertValue(x, y) {
+  insertValue(x, y, newValue) {
     const cell = this.#board[x][y]
+    
+    if(cell.getIsEditable) {
+      cell.setValue = newValue
+
+      if(!this.checkForMistakes(x, y)) {
+        // cell.setIsEditable = false
+      }
+    }
+  }
+
+  createDomStructureForBoard() {
+    const $board = document.createElement('div')
+    $board.setAttribute('id', 'board')
+
+    for(const x in this.#board) {
+      for(const y in this.#board[x]) {
+        const $input = this.#board[x][y].createDomElement()
+        $input.setAttribute('data-row-position-on-block', +x % 3)
+        $input.setAttribute('data-col-position-on-block', +y % 3)
+        $input.setAttribute('data-x', x)
+        $input.setAttribute('data-y', y)
+        
+        $input.addEventListener('input', (ev) => {
+          this.insertValue(x, y, ev.currentTarget.value)
+        })
+        
+        $input.addEventListener('focus', () => {
+          console.log('Resaltar los números')
+        })
+
+        $board.append($input)
+      }
+    }
+
+    return $board
+  }
+
+  createDomStructureForNumbers() {
+    const $container = document.createElement('div')
+    for(let i = 1; i <= 9; i++) {
+      console.log({i, appears: this.#foundedValues[i]});
+      const $numberContainer = document.createElement('button')
+      const $number = document.createElement('p')
+      const $numberLefts = document.createElement('p')
+
+      $number.innerHTML = i
+      $numberLefts.innerHTML = `${this.#foundedValues[i]}`
+
+      $numberContainer.append($number, $numberLefts);
+      $container.append($numberContainer)
+    }
+    return $container
   }
 
   /**
@@ -129,8 +195,9 @@ class Sudoku {
       }
     })
   }
-}
 
-const sudoku = new Sudoku()
-sudoku.checkForRepeatsOnBlock(4, 4)
-sudoku.logBoard()
+  get getFoundedValues() {
+    return this.#foundedValues
+  }
+
+}
