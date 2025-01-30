@@ -1,4 +1,6 @@
 :root {
+  --main-bg: #85e1d8;
+  --main-bg-light: #95e5dda1;
   --color-1: #242424;
   
   --thick-border: 3px solid rgba(66 61 61 / 0.61);
@@ -67,9 +69,16 @@
   &:focus {
     outline: none;
     background: none;
-
-    background-color: var(--cell-selected);
+    background-color: var(--main-bg);
   }
+}
+
+.highlighted {
+  background-color: var(--cell-selected);
+}
+
+.selected {
+  background-color: var(--main-bg);
 }
 
 .board__cell[data-row-position-on-block="0"] {
@@ -110,7 +119,13 @@
   padding: .3em .8em;
   border-radius: 8px;
   border: none;
-  background-color: #95e5dd;
+  background-color: var(--main-bg-light);
+
+  &:focus {
+    background-color: var(--main-bg);
+    border: none;
+    outline: none;
+  }
 
   & :nth-child(1) {
     font-size: 2rem;

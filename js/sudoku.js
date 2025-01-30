@@ -49,7 +49,7 @@ class Sudoku {
     this.difficulty = 'Medium'
     this.#mistakes = 0
     this.#maxMistakesAllowed = 3
-    this.selectedCell = -1
+    this.cellSelected = -1
   }
 
   checkForRepeatsOnRow(x) {
@@ -148,8 +148,41 @@ class Sudoku {
           this.insertValue(x, y, ev.currentTarget.value)
         })
         
-        $input.addEventListener('focus', () => {
-          console.log('Resaltar los números')
+        $input.addEventListener('focus', (ev) => {
+          const rowToDelete = document.querySelectorAll('.selected')
+          const colToDelete = document.querySelectorAll('.highlighted')
+
+          for(const currentCell of rowToDelete) {
+            currentCell.classList.remove('selected')
+          }
+          for(const currentCell of colToDelete) {
+            currentCell.classList.remove('highlighted')
+          }
+
+          $input.classList.add('selected')
+
+          const row = document.querySelectorAll('input[data-x="'+ x +'"]')
+          const col = document.querySelectorAll('input[data-y="'+ y +'"]')
+          
+          for(let currentCell = 0; currentCell < 9; currentCell++) {
+            row[currentCell].classList.add('highlighted')
+            col[currentCell].classList.add('highlighted')
+          }
+          // for(const currentCell of col) {
+          //   currentCell.classList.add('highlighted')
+          // }
+          // for(let xFromBucle = initialValueOfXForBucle; xFromBucle < initialValueOfXForBucle + 3; xFromBucle++) {
+          //   for(let yFromBucle = initialValueOfYForBucle; yFromBucle < initialValueOfYForBucle + 3; yFromBucle++) {
+          //     const foundedCell = this.#board[xFromBucle][yFromBucle]
+      
+          //     if(foundedCell.hasAValue() && foundedValues.includes(foundedCell.getValue)) {
+          //       // The cell is repeated
+          //       return 1
+          //     }else {
+          //       foundedValues.push(foundedCell.getValue);
+          //     }
+          //   }
+          // }
         })
 
         $board.append($input)
@@ -168,7 +201,7 @@ class Sudoku {
       const $numberLefts = document.createElement('p')
 
       $number.innerHTML = i
-      $numberLefts.innerHTML = `${this.#foundedValues[i]}`
+      $numberLefts.innerHTML = `${9 - this.#foundedValues[i]}`
 
       $numberContainer.append($number, $numberLefts);
       $container.append($numberContainer)
